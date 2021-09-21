@@ -1,17 +1,22 @@
 package main
 
 import (
-    "fmt"
-    "log"
-    "net/http"
+	"./books"
+	"net/http"
 )
 
 func main() {
-    log.Println("server running on port 8080")
-    http.HandleFunc("/", home)
-    log.Fatalln(http.ListenAndServe(":8080", nil))
+	http.HandleFunc("/", index)
+	http.HandleFunc("/books", books.Index)
+	http.HandleFunc("/books/show", books.Show)
+	http.HandleFunc("/books/create", books.Create)
+	http.HandleFunc("/books/create/process", books.CreateProcess)
+	http.HandleFunc("/books/update", books.Update)
+	http.HandleFunc("/books/update/process", books.UpdateProcess)
+	http.HandleFunc("/books/delete/process", books.DeleteProcess)
+	http.ListenAndServe(":8080", nil)
 }
 
-func home(response http.ResponseWriter, request *http.Request) {
-    fmt.Fprint(response, "Welcome to the Booksite\n\n", request, string("\n"))
+func index(w http.ResponseWriter, r *http.Request) {
+	http.Redirect(w, r, "/books", http.StatusSeeOther)
 }
